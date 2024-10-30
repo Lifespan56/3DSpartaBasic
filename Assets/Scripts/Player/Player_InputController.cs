@@ -56,7 +56,7 @@ public class Player_InputController : MonoBehaviour
 
         Vector3 localDiraction = transform.forward * curMoveInput.z + transform.right * curMoveInput.x;
 
-        rigid.velocity = localDiraction * MoveSpeed;
+        rigid.AddForce(localDiraction * MoveSpeed, ForceMode.Force);
     }
 
     
