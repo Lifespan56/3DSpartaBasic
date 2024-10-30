@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-
-
 public class Player_InputController : MonoBehaviour
 {
     private CharacterStatHandler statHandler;
@@ -13,6 +11,8 @@ public class Player_InputController : MonoBehaviour
     private float mouseSensitive;
     private float camMinX;
     private float camMaxX;
+
+    private bool isGrounded;
 
     Vector3 curMoveInput;
     Vector2 mouseDelta;
@@ -97,11 +97,34 @@ public class Player_InputController : MonoBehaviour
         }
     }
 
-    
     public void OnMouseDelta(InputAction.CallbackContext context)//버튼처럼 연결될 함수
     {
         mouseDelta = context.ReadValue<Vector2>();
         //Debug.Log(mouseDelta);//x,y 마우스 속도에 따라 100가까운 값도 나온다
+    }
+
+    public void OnJumpInput(InputAction.CallbackContext context)
+    {
+        if(context.phase == InputActionPhase.Started && isGrounded)
+        {
+            rigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 }
 
